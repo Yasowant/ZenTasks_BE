@@ -18,10 +18,13 @@ app.use('/api/v1/todos', todoRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // GraphQL endpoint (can also be versioned if desired)
-app.use('/api/v1/graphql', graphqlHTTP({
-  schema,
-  rootValue: resolvers,
-  graphiql: true,
-}));
+app.use(
+  '/api/v1/graphql',
+  graphqlHTTP({
+    schema,
+    rootValue: resolvers,
+    graphiql: true,
+  })
+);
 
 export default app;

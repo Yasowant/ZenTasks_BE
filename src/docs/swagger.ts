@@ -26,10 +26,15 @@ export const swaggerSpec = swaggerJsDoc({
     },
     servers: [
       {
+        url: 'https://todo-backend-y42y.onrender.com',
+        description: 'Production server (Render)',
+      },
+      {
         url: 'http://localhost:5000',
         description: 'Local server',
       },
     ],
+
     components: {
       securitySchemes: {
         bearerAuth: {
