@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { getTodos, getTodoById, createTodo, updateTodo, deleteTodo } from '../controllers/todoController';
+import {
+  createTodo,
+  getTodos,
+  getTodoById,
+  updateTodo,
+  deleteTodo,
+} from '../controllers/todoController';
 import { authMiddleware } from '../middlewares/authMiddleware';
 
 const router = Router();
@@ -10,6 +16,35 @@ const router = Router();
  *   name: Todos
  *   description: Todo management
  */
+
+/**
+ * @swagger
+ * /api/v1/todos:
+ *   post:
+ *     summary: Create a new todo
+ *     tags: [Todos]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *             properties:
+ *               projectGroup:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Todo created successfully
+ */
+router.post('/', authMiddleware, createTodo);
 
 /**
  * @swagger
@@ -36,9 +71,9 @@ router.get('/', authMiddleware, getTodos);
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
  *         description: The todo ID
  *     responses:
  *       200:
@@ -47,31 +82,6 @@ router.get('/', authMiddleware, getTodos);
  *         description: Todo not found
  */
 router.get('/:id', authMiddleware, getTodoById);
-
-/**
- * @swagger
- * /api/v1/todos:
- *   post:
- *     summary: Create a new todo
- *     tags: [Todos]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               description:
- *                 type: string
- *     responses:
- *       201:
- *         description: Todo created successfully
- */
-router.post('/', authMiddleware, createTodo);
 
 /**
  * @swagger
@@ -84,9 +94,9 @@ router.post('/', authMiddleware, createTodo);
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
  *         description: The ID of the todo to update
  *     requestBody:
  *       required: true
@@ -120,9 +130,9 @@ router.put('/:id', authMiddleware, updateTodo);
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
  *         description: The ID of the todo to delete
  *     responses:
  *       200:
