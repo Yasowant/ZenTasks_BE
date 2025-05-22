@@ -12,21 +12,22 @@ export const createTodo = async (req: AuthRequest, res: Response) => {
   res.status(201).json(todo);
 };
 
-export const getTodos = async (req: AuthRequest, res: Response) => {
-  const userId = req.user!.userId;
-  const cacheKey = `${TODO_CACHE_PREFIX}${userId}`;
-
+export const getTodos = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
   try {
+    const userId = req.user!.userId;
+    const cacheKey = `todos:${userId}`;
     const cached = (await redis.get(cacheKey)) as string | null;
 
     if (cached) {
-      console.log('Serving todos from Redis cache');
-      return res.json(JSON.parse(cached));
+      res.json(JSON.parse(cached));
+      return;
     }
 
     const todos = await todoService.getTodos(userId);
     await redis.set(cacheKey, JSON.stringify(todos), { ex: 60 });
-
     res.json(todos);
   } catch (error) {
     console.error('Error fetching todos:', error);
