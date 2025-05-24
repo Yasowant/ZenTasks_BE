@@ -4,16 +4,22 @@ export const swaggerSpec = swaggerJsDoc({
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Todo + GraphQL API',
+      title: 'ZenTasks',
       version: '1.0.0',
       description: `
-        ### API Documentation
+  ### API Documentation
 
-        This project includes:
-        - **Todo RESTful API** with JWT-based authentication
-        - **GraphQL API** for user authentication and profile operations
-        - **Swagger UI** for interactive testing
-      `,
+  This project includes:
+  - **Todo RESTful API** with JWT-based authentication and Redis caching
+  - **Project and Task management** integrated within the Todo API
+  - **MongoDB** integration using Mongoose for data persistence
+  - **GraphQL API** for user authentication and profile operations
+  - **Swagger UI** for interactive API documentation and testing
+  - **Modular folder structure** with controllers, services, models, middlewares, and routes
+  - **Protected routes** secured with JWT-based auth middleware
+ 
+`,
+
       contact: {
         name: 'Yasowant Nayak',
         email: 'yasowant@example.com',
