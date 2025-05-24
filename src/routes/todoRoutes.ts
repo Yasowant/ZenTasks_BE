@@ -19,6 +19,66 @@ const router = Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     ApplicationCustom:
+ *       type: object
+ *       properties:
+ *         tasks:
+ *           type: boolean
+ *           default: false
+ *         discussion:
+ *           type: boolean
+ *           default: false
+ *         milestone:
+ *           type: boolean
+ *           default: false
+ *         issuetracker:
+ *           type: boolean
+ *           default: false
+ *     Todo:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *         projectGroup:
+ *           type: string
+ *         title:
+ *           type: string
+ *         description:
+ *           type: string
+ *         projectColor:
+ *           type: string
+ *         applicationCustom:
+ *           $ref: '#/components/schemas/ApplicationCustom'
+ *         userId:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *     TodoInput:
+ *       type: object
+ *       required:
+ *         - title
+ *         - projectGroup
+ *       properties:
+ *         projectGroup:
+ *           type: string
+ *         title:
+ *           type: string
+ *         description:
+ *           type: string
+ *         projectColor:
+ *           type: string
+ *         applicationCustom:
+ *           $ref: '#/components/schemas/ApplicationCustom'
+ */
+
+/**
+ * @swagger
  * /api/v1/todos:
  *   post:
  *     summary: Create a new todo
@@ -30,19 +90,14 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - title
- *             properties:
- *               projectGroup:
- *                 type: string
- *               title:
- *                 type: string
- *               description:
- *                 type: string
+ *             $ref: '#/components/schemas/TodoInput'
  *     responses:
  *       201:
  *         description: Todo created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Todo'
  */
 router.post('/', authMiddleware, createTodo);
 
@@ -57,6 +112,12 @@ router.post('/', authMiddleware, createTodo);
  *     responses:
  *       200:
  *         description: List of todos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Todo'
  */
 router.get('/', authMiddleware, getTodos);
 
@@ -78,6 +139,10 @@ router.get('/', authMiddleware, getTodos);
  *     responses:
  *       200:
  *         description: A single todo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Todo'
  *       404:
  *         description: Todo not found
  */
@@ -103,17 +168,14 @@ router.get('/:id', authMiddleware, getTodoById);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               description:
- *                 type: string
- *               completed:
- *                 type: boolean
+ *             $ref: '#/components/schemas/TodoInput'
  *     responses:
  *       200:
  *         description: Todo updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Todo'
  *       404:
  *         description: Todo not found
  */
@@ -137,6 +199,13 @@ router.put('/:id', authMiddleware, updateTodo);
  *     responses:
  *       200:
  *         description: Todo deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  *       404:
  *         description: Todo not found
  */
