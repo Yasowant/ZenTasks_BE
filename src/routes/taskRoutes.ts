@@ -1,4 +1,3 @@
-// routes/taskRoutes.ts
 import { Router } from 'express';
 import {
   createTask,
@@ -29,28 +28,45 @@ const router = Router();
  *       properties:
  *         title:
  *           type: string
+ *           example: Implement login feature
  *         taskDescription:
  *           type: string
+ *           example: Integrate JWT-based login API with frontend
  *         projectId:
  *           type: string
  *           description: ID of the parent project (Todo)
+ *           example: 6650fb8f51df4c7c2367c2f2
+ *         assignedTo:
+ *           type: string
+ *           example: john.doe@example.com
+ *         status:
+ *           type: string
+ *           enum: [No Progress, In Progress, Completed]
+ *           example: In Progress
+ *         dueDate:
+ *           type: string
+ *           format: date
+ *           example: 2025-06-30
+ *         priority:
+ *           type: string
+ *           enum: [None, Low, Medium, High]
+ *           example: High
  *     Task:
- *       type: object
- *       properties:
- *         _id:
- *           type: string
- *         title:
- *           type: string
- *         taskDescription:
- *           type: string
- *         projectId:
- *           type: string
- *         createdAt:
- *           type: string
- *           format: date-time
- *         updatedAt:
- *           type: string
- *           format: date-time
+ *       allOf:
+ *         - $ref: '#/components/schemas/TaskInput'
+ *         - type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               example: 66510c9e892cd1a403ddc623
+ *             createdAt:
+ *               type: string
+ *               format: date-time
+ *               example: 2025-05-28T09:30:00Z
+ *             updatedAt:
+ *               type: string
+ *               format: date-time
+ *               example: 2025-05-28T10:00:00Z
  */
 
 /**
@@ -76,6 +92,8 @@ const router = Router();
  *               $ref: '#/components/schemas/Task'
  *       400:
  *         description: Tasks are not enabled for this project or bad request
+ *       401:
+ *         description: Unauthorized
  *       500:
  *         description: Internal server error
  */
@@ -95,6 +113,7 @@ router.post('/', authMiddleware, createTask);
  *         required: true
  *         schema:
  *           type: string
+ *         description: ID of the project to retrieve tasks for
  *     responses:
  *       200:
  *         description: List of tasks for a project
@@ -104,6 +123,12 @@ router.post('/', authMiddleware, createTask);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Task'
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Project not found
+ *       500:
+ *         description: Internal server error
  */
 router.get('/', authMiddleware, getTasks);
 
@@ -135,8 +160,12 @@ router.get('/', authMiddleware, getTasks);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Task'
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Task not found
+ *       500:
+ *         description: Internal server error
  */
 router.put('/:id', authMiddleware, async (req, res) => {
   await updateTask(req, res);
@@ -167,8 +196,13 @@ router.put('/:id', authMiddleware, async (req, res) => {
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: Task deleted successfully
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Task not found
+ *       500:
+ *         description: Internal server error
  */
 router.delete('/:id', authMiddleware, async (req, res) => {
   await deleteTask(req, res);
