@@ -2,5 +2,5 @@ projectKey=todo-backend
 serverUrl=http://localhost:9000
 serverVersion=25.4.0.105899
 dashboardUrl=http://localhost:9000/dashboard?id=todo-backend
-ceTaskId=dbf908cd-d8a0-492a-8b39-06ef9a8cc2e4
-ceTaskUrl=http://localhost:9000/api/ce/task?id=dbf908cd-d8a0-492a-8b39-06ef9a8cc2e4
+ceTaskId=de1a0211-bf4b-487e-8997-1bdceec93635
+ceTaskUrl=http://localhost:9000/api/ce/task?id=de1a0211-bf4b-487e-8997-1bdceec93635
