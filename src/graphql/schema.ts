@@ -18,5 +18,6 @@ export const schema = buildSchema(`
 
   type Mutation {
     register(name: String!, email: String!, password: String!): User!
+    googleLogin(idToken: String!): AuthPayload!
   }
 `);
