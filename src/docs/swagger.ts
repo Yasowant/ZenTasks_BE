@@ -93,7 +93,7 @@ export const swaggerSpec = swaggerJsDoc({
                       `,
                       variables: {
                         email: 'test@example.com',
-                        password: '********',
+                        password: 'examplePassword123!',
                       },
                     },
                   },
