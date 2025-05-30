@@ -9,7 +9,14 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './docs/swagger';
 
 const app = express();
-app.use(cors());
+
+// CORS configuration
+app.use(
+  cors({
+    origin: ['https://zen-tasks-fe.vercel.app', 'http://localhost:8081'],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -20,7 +27,7 @@ app.use('/api/v1/tasks', taskRoutes);
 // Swagger Docs (version-neutral)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// GraphQL endpoint (can also be versioned if desired)
+// GraphQL endpoint
 app.use(
   '/api/v1/graphql',
   graphqlHTTP({
