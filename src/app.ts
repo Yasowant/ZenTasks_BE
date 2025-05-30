@@ -10,19 +10,16 @@ import { swaggerSpec } from './docs/swagger';
 
 const app = express();
 
-// Allowed origins for CORS
 const allowedOrigins = [
   'https://zen-tasks-fe.vercel.app',
   'http://localhost:8081',
 ];
 
-// CORS options with dynamic origin checking
 const corsOptions = {
   origin: function (
     origin: string | undefined,
     callback: (err: Error | null, allow?: boolean) => void
   ) {
-    // Allow requests with no origin (like Postman, curl)
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.indexOf(origin) !== -1) {
