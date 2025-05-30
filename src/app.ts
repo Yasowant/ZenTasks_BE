@@ -9,30 +9,8 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './docs/swagger';
 
 const app = express();
+app.use(cors());
 
-const allowedOrigins = [
-  'https://zen-tasks-fe.vercel.app',
-  'http://localhost:8081',
-];
-
-const corsOptions = {
-  origin: function (
-    origin: string | undefined,
-    callback: (err: Error | null, allow?: boolean) => void
-  ) {
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
 app.use(express.json());
 
 // Versioned REST API
@@ -42,7 +20,7 @@ app.use('/api/v1/tasks', taskRoutes);
 // Swagger Docs (version-neutral)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// GraphQL endpoint (versioned)
+// GraphQL endpoint (can also be versioned if desired)
 app.use(
   '/api/v1/graphql',
   graphqlHTTP({
