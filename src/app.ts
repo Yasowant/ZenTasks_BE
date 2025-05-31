@@ -1,11 +1,14 @@
 import express from 'express';
 import cors from 'cors';
+
+import { graphqlHTTP } from 'express-graphql';
+import swaggerUi from 'swagger-ui-express';
+
 import todoRoutes from './routes/todoRoutes';
 import taskRoutes from './routes/taskRoutes';
-import { graphqlHTTP } from 'express-graphql';
+import paymentRoutes from './routes/paymentRoutes';
 import { schema } from './graphql/schema';
 import { resolvers } from './graphql/resolvers';
-import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './docs/swagger';
 
 const app = express();
@@ -24,14 +27,15 @@ app.use(
 
 app.use(express.json());
 
-// Versioned REST API
+// ✅ Correct usage — registering routers
 app.use('/api/v1/todos', todoRoutes);
 app.use('/api/v1/tasks', taskRoutes);
+app.use('/api/v1/payments', paymentRoutes);
 
-// Swagger Docs (version-neutral)
+// Swagger documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// GraphQL endpoint
+// GraphQL API
 app.use(
   '/api/v1/graphql',
   graphqlHTTP({
