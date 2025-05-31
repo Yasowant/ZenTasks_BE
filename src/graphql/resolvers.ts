@@ -38,4 +38,9 @@ export const resolvers = {
     await user.save();
     return user;
   },
+
+  logout: async ({ refreshToken }: any) => {
+    // Without token storage, simply trust client to delete tokens
+    return true;
+  },
 };
