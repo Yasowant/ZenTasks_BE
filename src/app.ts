@@ -13,7 +13,11 @@ const app = express();
 // CORS configuration
 app.use(
   cors({
-    origin: ['https://zen-tasks-fe.vercel.app', 'http://localhost:8081'],
+    origin: [
+      'https://zen-tasks-fe.vercel.app',
+      'http://localhost:8081',
+      'https://zen-task-front-end.vercel.app',
+    ],
     credentials: true,
   })
 );
