@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { User } from '../models/User';
+import { Payment } from '../models/Payment';
 import { generateToken } from '../utils/token';
 
 export const resolvers = {
@@ -14,14 +15,21 @@ export const resolvers = {
 
   register: async ({ name, email, password }: any) => {
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      throw new Error('User already exists');
-    }
+    if (existingUser) throw new Error('User already exists');
+
+    // ✅ Check if this email has completed a payment
+    const payment = await Payment.findOne({ email });
+    if (!payment) throw new Error('Payment required before registration');
+
     const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashed });
+    const user = await User.create({
+      name,
+      email,
+      password: hashed,
+      hasPaid: true,
+    });
     return user;
   },
-
   getUser: async ({ id }: any) => {
     const user = await User.findById(id).select('-password');
     if (!user) throw new Error('User not found');
