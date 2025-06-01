@@ -21,5 +21,7 @@ export const schema = buildSchema(`
     login(email: String!, password: String!): AuthPayload!
     updateUser(id: ID!, name: String, email: String): User!
     logout(refreshToken: String!): Boolean!
+    forgotPassword(email: String!): Boolean!
+    resetPassword(token: String!, newPassword: String!): Boolean!
   }
 `);

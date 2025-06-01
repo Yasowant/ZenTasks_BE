@@ -41,7 +41,7 @@ This project includes:
       {
         name: 'GraphQL',
         description:
-          'GraphQL operations like login, register, getUser, updateUser, logout',
+          'GraphQL operations like login, register, getUser, updateUser, logout, forgot/reset password',
       },
       {
         name: 'Todos',
@@ -84,7 +84,7 @@ This project includes:
           tags: ['GraphQL'],
           summary: 'GraphQL endpoint',
           description:
-            'Send GraphQL queries and mutations for user login, registration, profile update, and logout.',
+            'Send GraphQL queries and mutations for user login, registration, password recovery, profile updates, and logout.',
           requestBody: {
             required: true,
             content: {
@@ -122,7 +122,7 @@ This project includes:
                     },
                   },
                   Register: {
-                    summary: 'Register a user',
+                    summary: 'Register a user (payment required)',
                     value: {
                       query: `
                         mutation Register($name: String!, $email: String!, $password: String!) {
@@ -189,6 +189,33 @@ This project includes:
                       },
                     },
                   },
+                  ForgotPassword: {
+                    summary: 'Trigger password reset email',
+                    value: {
+                      query: `
+                        mutation ForgotPassword($email: String!) {
+                          forgotPassword(email: $email)
+                        }
+                      `,
+                      variables: {
+                        email: 'john@example.com',
+                      },
+                    },
+                  },
+                  ResetPassword: {
+                    summary: 'Reset password with a valid token',
+                    value: {
+                      query: `
+                        mutation ResetPassword($token: String!, $newPassword: String!) {
+                          resetPassword(token: $token, newPassword: $newPassword)
+                        }
+                      `,
+                      variables: {
+                        token: 'reset_token_here',
+                        newPassword: 'newStrongPassword123!',
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -224,5 +251,5 @@ This project includes:
       },
     },
   },
-  apis: ['./src/routes/*.ts'], // Adjust path according to your project structure
+  apis: ['./src/routes/*.ts'],
 });
