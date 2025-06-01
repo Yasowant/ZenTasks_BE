@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { User } from '../models/User';
 import { Payment } from '../models/Payment';
 import { generateToken } from '../utils/token';
+import { sendResetEmail } from '../utils/sendResetEmail';
 
 export const resolvers = {
   login: async ({ email, password }: any) => {
@@ -49,6 +51,36 @@ export const resolvers = {
 
   logout: async ({ refreshToken }: any) => {
     // Without token storage, simply trust client to delete tokens
+    return true;
+  },
+
+  forgotPassword: async ({ email }: any) => {
+    const user = await User.findOne({ email });
+    if (!user) return true;
+
+    const token = crypto.randomBytes(32).toString('hex');
+    user.resetToken = token;
+    user.resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save();
+
+    await sendResetEmail(email, token);
+    return true;
+  },
+
+  resetPassword: async ({ token, newPassword }: any) => {
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiry: { $gt: new Date() },
+    });
+
+    if (!user) throw new Error('Invalid or expired token');
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    user.password = hashed;
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+    await user.save();
+
     return true;
   },
 };
