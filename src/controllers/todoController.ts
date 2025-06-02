@@ -24,24 +24,42 @@ export const getTodos = async (
   res: Response
 ): Promise<void> => {
   try {
-    const userId = req.user!.userId;
-    const cacheKey = `${TODO_CACHE_PREFIX}${userId}`;
-
-    const cached = await redis.get(cacheKey);
-
-    if (cached) {
-      // Assuming redis returns stringified JSON
-      const todos = JSON.parse(cached as string);
-      res.json(todos);
+    const user = req.user;
+    if (!user) {
+      res.status(401).json({ message: 'Unauthorized' });
       return;
     }
 
+    const userId = user.userId;
+    const cacheKey = `${TODO_CACHE_PREFIX}${userId}`;
+
+    try {
+      const cached = await redis.get(cacheKey);
+      if (cached) {
+        try {
+          const todos = JSON.parse(cached as string); // now TypeScript knows it's a string
+          res.json(todos);
+          return;
+        } catch (err) {
+          console.error('Error parsing cached todos:', err);
+          await redis.del(cacheKey); // clear the corrupted cache
+        }
+      }
+    } catch (redisError) {
+      console.warn('Redis unavailable:', redisError);
+    }
+
     const todos = await todoService.getTodos(userId);
-    await redis.set(cacheKey, JSON.stringify(todos), { ex: 60 });
+
+    try {
+      await redis.set(cacheKey, JSON.stringify(todos), { ex: 10 });
+    } catch (redisSetError) {
+      console.warn('Failed to cache todos:', redisSetError);
+    }
 
     res.json(todos);
   } catch (error) {
-    console.error('Error fetching todos:', error);
+    console.error('Unexpected error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
