@@ -19,6 +19,7 @@ app.use(
     origin: [
       'https://zen-tasks-fe.vercel.app',
       'http://localhost:8081',
+      "http://localhost:8080",
       'https://zen-task-front-end.vercel.app',
     ],
     credentials: true,
