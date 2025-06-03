@@ -1,5 +1,5 @@
 import express from 'express';
-import { verifyPayment } from '../controllers/paymentController';
+import { verifyPayment,createOrder } from '../controllers/paymentController';
 
 const router = express.Router();
 
@@ -72,5 +72,6 @@ const router = express.Router();
  *                   example: "Internal server error"
  */
 router.post('/verifyPayment', verifyPayment);
+router.post('/createOrder', createOrder); // New route
 
 export default router;

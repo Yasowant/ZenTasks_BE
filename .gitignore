@@ -36,3 +36,4 @@ swagger.json
 
 # Optional: Ignore output of ts-node-dev or other temp files
 tmp/
+node_modules/
