@@ -7,6 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 import todoRoutes from './routes/todoRoutes';
 import taskRoutes from './routes/taskRoutes';
 import paymentRoutes from './routes/paymentRoutes';
+import groupRoutes from './routes/groupRoutes';
 import { schema } from './graphql/schema';
 import { resolvers } from './graphql/resolvers';
 import { swaggerSpec } from './docs/swagger';
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use('/api/v1/todos', todoRoutes);
 app.use('/api/v1/tasks', taskRoutes);
 app.use('/api/v1/payments', paymentRoutes);
+app.use('/api/v1/groups', groupRoutes);
 
 // Swagger documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
