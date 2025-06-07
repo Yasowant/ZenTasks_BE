@@ -2,7 +2,10 @@ import { Response } from 'express';
 import { AuthRequest } from '../types/express';
 import * as groupService from '../services/groupService';
 
-export const createGroup = async (req: AuthRequest, res: Response): Promise<void> => {
+export const createGroup = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
   try {
     const userId = req.user?.userId;
     const { groupName, groupDescription, groupAdministrator } = req.body;
@@ -14,6 +17,21 @@ export const createGroup = async (req: AuthRequest, res: Response): Promise<void
 
     if (!groupName) {
       res.status(400).json({ message: 'Group name is required' });
+      return;
+    }
+
+    // ✅ Check if group with same name exists for the user
+    const existingGroup = await groupService.findGroupByNameAndUser(
+      groupName,
+      userId
+    );
+    if (existingGroup) {
+      res
+        .status(409)
+        .json({
+          success: false,
+          message: 'Group with this name already exists',
+        });
       return;
     }
 
@@ -29,7 +47,10 @@ export const createGroup = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-export const getGroups = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getGroups = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
   try {
     const userId = req.user?.userId;
 
